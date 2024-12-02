@@ -1,14 +1,13 @@
 import Home from "@/views/home/home";
-import Login from "@/views/login/login";
+import { HomeOutlined } from "@ant-design/icons";
 
 const routes = [
   {
-    path: "login",
-    element: <Login />,
-  },
-  {
     path: "home",
     element: <Home />,
+    label: "首页",
+    key: "home",
+    icon: <HomeOutlined />,
   },
 ];
 export default routes;

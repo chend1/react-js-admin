@@ -1,12 +1,10 @@
-import { NavLink, Outlet  } from "react-router";
+import Layout from '@/layout/layout'
+import 'normalize.css/normalize.css'
+import './App.less'
 function App() {
   return (
     <>
-      <nav>
-        <NavLink to="/home">Home</NavLink>
-        <NavLink to="/login">Login</NavLink>
-      </nav>
-      <Outlet />
+      <Layout />
     </>
   )
 }
