@@ -1,11 +1,12 @@
-import Layout from '@/layout/layout'
+import { BrowserRouter } from 'react-router'
+import RouterView from './router/router'
 import 'normalize.css/normalize.css'
 import './App.less'
 function App() {
   return (
-    <>
-      <Layout />
-    </>
+    <BrowserRouter>
+      <RouterView />
+    </BrowserRouter>
   )
 }
 

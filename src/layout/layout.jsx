@@ -8,9 +8,9 @@ import './layout.less'
 function layout() {
   const navigate = useNavigate()
   const menuClick = (e) => {
-    console.log(e)
-    const { key } = e
-    navigate(key)
+    const keyPath = e.keyPath.reverse().filter((item) => item !== 'tmp-0')
+    const path = keyPath.join('/')
+    navigate(path)
   }
   const [collapsed, setCollapsed] = useState(false)
   const toggleCollapsed = () => {
