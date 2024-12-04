@@ -1,8 +1,11 @@
 import './login.less'
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { Input, Button } from 'antd'
 import { UserOutlined, KeyOutlined } from '@ant-design/icons'
+import { setUserInfo } from '../../store/mainSlice'
 function Login() {
+  const dispatch = useDispatch()
   const [accountInfo, setAccountInfo] = useState({
     account: '',
     password: '',
@@ -10,11 +13,12 @@ function Login() {
 
   const loginClick = () => {
     console.log(accountInfo)
+    dispatch(setUserInfo(accountInfo))
   }
   return (
     <div className="login">
       <div className="login-box">
-        <div className="left">左边</div>
+        <div className="left"></div>
         <div className="right">
           <div className="title">登录管理后台</div>
           <div className="form">
