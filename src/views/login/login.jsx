@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Input, Button } from 'antd'
 import { UserOutlined, KeyOutlined } from '@ant-design/icons'
-import { setUserInfo } from '../../store/mainSlice'
+import { handleLogin } from '../../store/mainSlice'
 function Login() {
   const dispatch = useDispatch()
   const [accountInfo, setAccountInfo] = useState({
@@ -12,8 +12,7 @@ function Login() {
   })
 
   const loginClick = () => {
-    console.log(accountInfo)
-    dispatch(setUserInfo(accountInfo))
+    dispatch(handleLogin(accountInfo))
   }
   return (
     <div className="login">
