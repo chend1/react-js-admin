@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import { useRoutes, useLocation, useNavigate } from "react-router-dom";
 import { getStorage } from '../utils/storage';
-import routes from "./index";
+import { useSelector } from 'react-redux';
 function router () {
-  const element = useRoutes(routes);
+  const routerMenu = useSelector(state => state.main.routerMenu)
+  const element = useRoutes(routerMenu);
   return element
 }
 

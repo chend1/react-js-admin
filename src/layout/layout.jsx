@@ -2,11 +2,13 @@ import { useState } from 'react'
 import { Outlet, useNavigate } from 'react-router'
 import { Menu, Dropdown } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
-import router from '../router/index'
+import { handleLogout } from '../store/mainSlice'
+import { useDispatch, useSelector } from 'react-redux'
 import './layout.less'
 
 function layout() {
   const navigate = useNavigate()
+  const menuList = useSelector((state) => state.main.menuList)
   const menuClick = (e) => {
     const keyPath = e.keyPath.reverse().filter((item) => item !== 'tmp-0')
     const path = keyPath.join('/')
@@ -15,6 +17,10 @@ function layout() {
   const [collapsed, setCollapsed] = useState(false)
   const toggleCollapsed = () => {
     setCollapsed(!collapsed)
+  }
+  const dispatch = useDispatch()
+  const logout = () => {
+    dispatch(handleLogout())
   }
   return (
     <div className="layout">
@@ -39,16 +45,22 @@ function layout() {
           mode="inline"
           style={{ flex: 1 }}
           onClick={menuClick}
-          items={router}
+          items={menuList}
           inlineCollapsed={collapsed}
         />
       </nav>
       <div className="layout-content">
         <div className="header">
-          <Dropdown menu={{ items: [{
-            label: '退出登录',
-            key: 'logout',
-          }] }}>
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  label: <span onClick={logout()}>'退出登录'</span>,
+                  key: 'logout',
+                },
+              ],
+            }}
+          >
             <div className="user-info">
               <div className="avatar"></div>
               <div className="name">张三</div>

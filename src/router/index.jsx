@@ -6,11 +6,14 @@ import MenuManage from '@/views/power/menuManage/menuManage'
 import RuleManage from '@/views/power/ruleManage/ruleManage'
 import { HomeOutlined } from '@ant-design/icons'
 
-const routes = [
+export const localRoutes = [
   {
     path: '/login',
     element: <Login />,
   },
+]
+
+export const asyncRoutes = [
   {
     path: '',
     element: <Layout />,
@@ -52,4 +55,3 @@ const routes = [
   },
 ]
 
-export default routes

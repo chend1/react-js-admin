@@ -2,6 +2,7 @@ import { Random } from 'mockjs';
 import { accountList } from './account';
 import { roleList } from './role';
 import { modifyMenuList } from './menu';
+import { getStorage } from '@/utils/storage';
 
 const login = {
   url: '/login',
@@ -51,12 +52,14 @@ const getUserInfo = {
   url: '/user/info',
   type: 'get',
   response: (config) => {
-    const { token } = config.body;
+    const token = config.query.token || getStorage('token');
     try {
       const tokenInfo = JSON.parse(token);
       const userInfo = accountList.filter(
         (user) => user.account === tokenInfo.account,
       )[0];
+      console.log('userInfo', userInfo);
+      
       const roleInfo = roleList.filter((role) => role.id === userInfo.role);
       const ids = roleInfo[0].menuList;
       const menuList = modifyMenuList();
@@ -68,7 +71,9 @@ const getUserInfo = {
           menu: getMyMenuList(ids, menuList),
         },
       };
-    } catch {
+    } catch (err){
+      console.log('err', err);
+      
       return {
         status: false,
         code: 400,
