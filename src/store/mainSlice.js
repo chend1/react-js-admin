@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { login, getUserInfo } from '@/api'
 import { setStorage } from '@/utils/storage'
-import { useNavigate } from 'react-router'
-import { localRoutes, asyncRoutes } from '@/router'
+import { useNavigate } from 'react-router-dom'
+import { asyncRoutes } from '@/router'
+import { generateRoutes } from './permission'
 
 // 登录
 export const handleLogin = createAsyncThunk(
@@ -26,7 +27,9 @@ export const handleGetUserInfo = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await getUserInfo()
-      return res
+      const { menu, userInfo } = res
+      const { menuList } = generateRoutes(asyncRoutes, menu, 'children', 'key')
+      return { menuList, userInfo }
     } catch (error) {
       return rejectWithValue(error)
     }
@@ -38,37 +41,29 @@ const mainSlice = createSlice({
   initialState: {
     userInfo: {},
     token: '',
-    menuList: localRoutes,
-    routerMenu: localRoutes,
+    menuList: [],
   },
   reducers: {
     setUserInfo(state, action) {
-      state.userInfo = action.payload
-    },
-    setMenuList(state) {
-      state.menuList = action.payload
-      state.routerMenu = action.payload
+      state.userInfo = action.payload.userInfo || {}
+      state.menuList = action.payload.menuList || []
     },
     handleLogout(state) {
       state.token = ''
       state.userInfo = {}
       state.menuList = []
-      state.routerMenu = []
       setStorage('token', '')
-      const navigate = useNavigate()
-      navigate('/login')
     },
   },
   extraReducers: (builder) => {
     builder.addCase(handleLogin.fulfilled, (state, action) => {
       state.token = action.payload
-      handleGetUserInfo()
     })
     builder.addCase(handleGetUserInfo.fulfilled, (state, action) => {
-      console.log('获取用户信息成功', action.payload)
-      state.userInfo = action.payload.userInfo
-      state.menuList = asyncRoutes
-      state.routerMenu = asyncRoutes
+      const { menuList, userInfo } = action.payload
+      state.menuList = menuList || []
+      state.userInfo = userInfo || {}
+      console.log('menuList', menuList);
     })
   },
 })

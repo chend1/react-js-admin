@@ -1,17 +1,25 @@
 import './login.less'
-import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { Input, Button } from 'antd'
 import { UserOutlined, KeyOutlined } from '@ant-design/icons'
 import { handleLogin } from '../../store/mainSlice'
 function Login() {
   const dispatch = useDispatch()
   const [accountInfo, setAccountInfo] = useState({
-    account: '',
-    password: '',
+    account: import.meta.env.MODE === 'development' ? 'admin' : '',
+    password: import.meta.env.MODE === 'development' ? '123456' : '',
   })
-
-  const loginClick = () => {
+  const navigate = useNavigate()
+  const userInfo = useSelector((state) => state.main.userInfo)
+  useEffect(() => {
+    if (userInfo.id) {
+      console.log('登录成功')
+      navigate('/')
+    }
+  })
+  const loginClick = async () => {
     dispatch(handleLogin(accountInfo))
   }
   return (
@@ -58,7 +66,7 @@ function Login() {
                   color: '#fff',
                   backgroundColor: '#12ADA9',
                 }}
-                onClick={ loginClick }
+                onClick={loginClick}
               >
                 登录
               </Button>

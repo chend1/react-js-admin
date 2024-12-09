@@ -1,6 +1,8 @@
 import Login from '@/views/login/login'
 import Layout from '@/layout/layout'
 import Home from '@/views/home/home'
+import Error401 from '@/views/error/401'
+import Error404 from '@/views/error/404'
 import AccountManage from '@/views/power/accountManage/accountManage'
 import MenuManage from '@/views/power/menuManage/menuManage'
 import RuleManage from '@/views/power/ruleManage/ruleManage'
@@ -11,6 +13,26 @@ export const localRoutes = [
     path: '/login',
     element: <Login />,
   },
+  {
+    path: '',
+    element: <Layout />,
+    children: [
+      {
+        path: '/401',
+        element: <Error401 />,
+        label: '401',
+        key: '401',
+        icon: <HomeOutlined />,
+      },
+      {
+        path: '/404',
+        element: <Error404 />,
+        label: '404',
+        key: '404',
+        icon: <HomeOutlined />,
+      },
+    ],
+  }
 ]
 
 export const asyncRoutes = [

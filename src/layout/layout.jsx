@@ -21,6 +21,7 @@ function layout() {
   const dispatch = useDispatch()
   const logout = () => {
     dispatch(handleLogout())
+    navigate('/login')
   }
   return (
     <div className="layout">
@@ -55,7 +56,7 @@ function layout() {
             menu={{
               items: [
                 {
-                  label: <span onClick={logout()}>'退出登录'</span>,
+                  label: <span onClick={logout}>退出登录</span>,
                   key: 'logout',
                 },
               ],
