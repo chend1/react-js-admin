@@ -1,9 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { login, getUserInfo } from '@/api'
 import { setStorage } from '@/utils/storage'
-import { useNavigate } from 'react-router-dom'
-import { asyncRoutes } from '@/router'
-import { generateRoutes } from './permission'
 
 // 登录
 export const handleLogin = createAsyncThunk(
@@ -28,8 +25,7 @@ export const handleGetUserInfo = createAsyncThunk(
     try {
       const res = await getUserInfo()
       const { menu, userInfo } = res
-      const { menuList } = generateRoutes(asyncRoutes, menu, 'children', 'key')
-      return { menuList, userInfo }
+      return { menuList: menu, userInfo }
     } catch (error) {
       return rejectWithValue(error)
     }
@@ -63,7 +59,6 @@ const mainSlice = createSlice({
       const { menuList, userInfo } = action.payload
       state.menuList = menuList || []
       state.userInfo = userInfo || {}
-      console.log('menuList', menuList);
     })
   },
 })

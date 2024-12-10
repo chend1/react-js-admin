@@ -1,14 +1,33 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Outlet, useNavigate } from 'react-router'
 import { Menu, Dropdown } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import { handleLogout } from '../store/mainSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
+import { asyncRoutes } from '@/router'
+import { generateRoutes } from '@/utils/permission'
 import './layout.less'
 
 function layout() {
+  const location = useLocation()
+  const pathname = location.pathname
+  const defaultPath = pathname
+    .split('/')
+    .filter((item) => item !== '')
+    .map((item, index) => {
+      if (index === 0) {
+        return `/${item}`
+      } else {
+        return item
+      }
+    })
+  const openKeys = defaultPath.length > 1 ? defaultPath.slice(0, -1) : []
   const navigate = useNavigate()
   const menuList = useSelector((state) => state.main.menuList)
+  const menuRoutes = useMemo(() => {
+    return generateRoutes(asyncRoutes, menuList, 'children', 'path', 'menu')
+  }, [menuList])
   const menuClick = (e) => {
     const keyPath = e.keyPath.reverse().filter((item) => item !== 'tmp-0')
     const path = keyPath.join('/')
@@ -46,8 +65,10 @@ function layout() {
           mode="inline"
           style={{ flex: 1 }}
           onClick={menuClick}
-          items={menuList}
+          items={menuRoutes}
           inlineCollapsed={collapsed}
+          defaultOpenKeys={openKeys}
+          defaultSelectedKeys={defaultPath}
         />
       </nav>
       <div className="layout-content">

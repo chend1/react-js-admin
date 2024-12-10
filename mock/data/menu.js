@@ -44,7 +44,7 @@ export const menuList = getStorage('menuList') || [
   },
   {
     id: 104,
-    path: '/power/userManage',
+    path: 'accountManage',
     title: '用户管理',
     icon: '',
     children: [],
@@ -54,7 +54,7 @@ export const menuList = getStorage('menuList') || [
   },
   {
     id: 105,
-    path: '/power/menuManage',
+    path: 'menuManage',
     title: '菜单管理',
     icon: '',
     children: [],
@@ -64,7 +64,7 @@ export const menuList = getStorage('menuList') || [
   },
   {
     id: 106,
-    path: '/power/roleManage',
+    path: 'roleManage',
     title: '角色管理',
     icon: '',
     children: [],

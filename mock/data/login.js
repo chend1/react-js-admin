@@ -58,8 +58,6 @@ const getUserInfo = {
       const userInfo = accountList.filter(
         (user) => user.account === tokenInfo.account,
       )[0];
-      console.log('userInfo', userInfo);
-      
       const roleInfo = roleList.filter((role) => role.id === userInfo.role);
       const ids = roleInfo[0].menuList;
       const menuList = modifyMenuList();

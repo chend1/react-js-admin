@@ -41,7 +41,7 @@ export const asyncRoutes = [
     element: <Layout />,
     children: [
       {
-        path: 'home',
+        path: '/home',
         element: <Home />,
         label: '首页',
         key: 'home',

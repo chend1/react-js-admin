@@ -24,49 +24,49 @@ function flatArray(routeList, key = 'children') {
  */
 function getAccessibleRoutes(localRoutes, powerRouteList, key = 'path') {
   const routeList = []
-  const pathList = []
   localRoutes.forEach((route) => {
     const item = route
     const powerRoute = powerRouteList.filter(
-      (option) => option[key] === item[key]
+      (option) => option[key] === item[key] || !route[key]
     )
     if (powerRoute[0]) {
       if (item.children && item.children.length) {
-        const { accessibleRoutes, showPathList } = getAccessibleRoutes(
+        const { accessibleRoutes } = getAccessibleRoutes(
           item.children,
           powerRouteList
         )
         item.children = accessibleRoutes
         routeList.push(item)
-        pathList.push(...showPathList, item[key])
       } else {
         item.label = powerRoute[0].title
         routeList.push(item)
-        pathList.push(item[key])
       }
     }
   })
-  return { accessibleRoutes: routeList, showPathList: pathList }
+  return { accessibleRoutes: routeList }
 }
 
 /** 根据权限路由和可访问路径列表，返回菜单列表
  *
  *  @param {Array} powerRoutes 权限路由
- *  @param {Array} showPathList 可访问路径列表
+ *  @param {Array} localRouteList 一维本地路由
  *  @param {String} key 路径key
  */
 
-function getMenuList(powerRoutes, showPathList, key = 'path') {
+function getMenuList(powerRoutes, localRouteList, key = 'path') {
   const menuList = []
   powerRoutes.forEach((item) => {
-    const list = { ...item }
-    if (showPathList.indexOf(item[key]) !== -1) {
-      if (item.children && item.children.length) {
-        list.children = getMenuList(item.children, showPathList)
-        menuList.push(list)
+    const menuInfo = { ...item }
+    const route = localRouteList.find((option) => option[key] === item[key])
+    if (route && route[key].indexOf(menuInfo[key]) !== -1) {
+      if (menuInfo.children && menuInfo.children.length) {
+        menuInfo.icon = route.icon
+        menuInfo.children = getMenuList(menuInfo.children, localRouteList)
+        menuList.push(menuInfo)
       } else {
-        list.children = []
-        menuList.push(list)
+        menuInfo.children = []
+        menuInfo.icon = route.icon
+        menuList.push(menuInfo)
       }
     }
   })
@@ -76,12 +76,15 @@ function getMenuList(powerRoutes, showPathList, key = 'path') {
 /** 菜单列表排序
  *
  *  @param {Array} menuList 菜单列表
+ * @param {String} key 路径key
  *
  */
-function sortMenu(menuList) {
+function sortMenu(menuList, key = 'path') {
   const list = []
   let sort = 0
   menuList.forEach((item) => {
+    item.key = item[key]
+    item.label = item.title
     const menu = { ...item }
     sort = item.sort
     if (list[sort]) {
@@ -92,7 +95,7 @@ function sortMenu(menuList) {
     if (menu.children && menu.children.length) {
       menu.children = sortMenu(item.children)
     } else {
-      menu.children = []
+      delete menu.children
     }
   })
   return list.filter((option) => !!option).flat()
@@ -104,6 +107,7 @@ function sortMenu(menuList) {
  *  @param {Array} powerRoutes 权限路由
  *  @param {String} children 判断是否有子集的字段，默认children
  *  @param {String} key 路径字段，默认path
+ *  @param {String} type 需要返回的是路由还是显示菜单，默认all，都返回
  *
  */
 
@@ -111,25 +115,42 @@ export function generateRoutes(
   localRoutes,
   powerRoutes,
   children = 'children',
-  key = 'path'
+  key = 'path',
+  type = 'all'
 ) {
   // 一维权限路由列表
   const powerRouteList = flatArray(powerRoutes, children)
   // 本地可使用路由和可访问路径（path）列表
-  const { accessibleRoutes, showPathList } = getAccessibleRoutes(
+  const { accessibleRoutes } = getAccessibleRoutes(
     localRoutes,
     powerRouteList,
     key
   )
-  // 菜单显示列表
-  const menuList = getMenuList(powerRoutes, showPathList, key)
-  // 菜单排序
-  const sortMenuList = sortMenu(menuList)
-  return new Promise((reject) => {
-    const result = {
-      accessibleRoutes,
-      menuList: sortMenuList,
+  switch (type) {
+    case 'route': {
+      return accessibleRoutes
     }
-    reject(result)
-  })
+    case 'menu': {
+      const localRouteList = flatArray(localRoutes, children)
+      // 菜单显示列表
+      const menuList = getMenuList(powerRoutes, localRouteList, key)
+      // 菜单排序
+      const sortMenuList = sortMenu(menuList)
+      return sortMenuList
+    }
+    default: {
+      const localRouteList = flatArray(localRoutes, children)
+      // 菜单显示列表
+      const menuList = getMenuList(powerRoutes, localRouteList, key)
+      // 菜单排序
+      const sortMenuList = sortMenu(menuList)
+      return new Promise((reject) => {
+        const result = {
+          accessibleRoutes,
+          menuList: sortMenuList,
+        }
+        reject(result)
+      })
+    }
+  }
 }
