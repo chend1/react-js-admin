@@ -1,0 +1,45 @@
+.error{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #f4f5f7;
+  .error-content{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -200px;
+    .img{
+      width: 220px;
+      animation: imgRotate 10s linear infinite;
+      img{
+        width: 100%;
+      }
+    }
+    .num{
+      font-size: 260px;
+      margin-top: 20px;
+      color: #d5d8db;
+      font-weight: 700;
+    }
+  }
+  .hint{
+    font-size: 36px;
+    color: #9199a0;
+    text-align: center;
+    padding-left: 50px;
+  }
+}
+
+// 旋转动画
+@keyframes imgRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+

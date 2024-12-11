@@ -30,7 +30,7 @@ export const localRoutes = [
         label: '404',
         key: '404',
         icon: <HomeOutlined />,
-      },
+      }
     ],
   }
 ]
@@ -72,6 +72,22 @@ export const asyncRoutes = [
             key: 'ruleManage',
           },
         ],
+      },
+    ],
+  },
+]
+
+export const redirectRoutes = [
+  {
+    path: '',
+    element: <Layout />,
+    children: [
+      {
+        path: '/*',
+        element: <Error404 />,
+        label: '404',
+        key: '404',
+        icon: <HomeOutlined />,
       },
     ],
   },

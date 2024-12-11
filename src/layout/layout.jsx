@@ -25,6 +25,7 @@ function layout() {
   const openKeys = defaultPath.length > 1 ? defaultPath.slice(0, -1) : []
   const navigate = useNavigate()
   const menuList = useSelector((state) => state.main.menuList)
+  const userInfo = useSelector((state) => state.main.userInfo)
   const menuRoutes = useMemo(() => {
     return generateRoutes(asyncRoutes, menuList, 'children', 'path', 'menu')
   }, [menuList])
@@ -84,8 +85,10 @@ function layout() {
             }}
           >
             <div className="user-info">
-              <div className="avatar"></div>
-              <div className="name">张三</div>
+              <div className="avatar">
+                <img src={userInfo.avatar} alt="" />
+              </div>
+              <div className="name">{userInfo.name}</div>
             </div>
           </Dropdown>
         </div>

@@ -3,16 +3,18 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useRoutes, useLocation, useNavigate } from 'react-router-dom'
 import { getStorage } from '../utils/storage'
 import { handleGetUserInfo, handleLogout } from '../store/mainSlice'
-import { localRoutes, asyncRoutes } from './index'
+import { localRoutes, asyncRoutes, redirectRoutes } from './index'
 import { generateRoutes } from '@/utils/permission'
 function router() {
   const menuList = useSelector((state) => state.main.menuList)
   const routes = useMemo(() => {
     return generateRoutes(asyncRoutes, menuList, 'children', 'path', 'route')
   }, [menuList])
-  console.log('routes', routes);
-  
-  const menu = [...localRoutes, ...routes]
+  const menu = [
+    ...localRoutes,
+    ...routes,
+    ...redirectRoutes,
+  ]
   const element = useRoutes(menu)
   return element
 }
@@ -52,11 +54,7 @@ function RouterGuard(RouterComponent) {
       if (menuList.length === 0) {
         // navigate('/401')
       } else {
-        if(whiteList.includes(location.pathname)){
-          navigate('/')
-        } else {
-          navigate(location.pathname)
-        }
+        navigate(location.pathname)
       }
     }, [menuList])
 

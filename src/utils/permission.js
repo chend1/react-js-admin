@@ -144,13 +144,10 @@ export function generateRoutes(
       const menuList = getMenuList(powerRoutes, localRouteList, key)
       // 菜单排序
       const sortMenuList = sortMenu(menuList)
-      return new Promise((reject) => {
-        const result = {
-          accessibleRoutes,
-          menuList: sortMenuList,
-        }
-        reject(result)
-      })
+      return {
+        accessibleRoutes,
+        menuList: sortMenuList,
+      }
     }
   }
 }
