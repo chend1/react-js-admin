@@ -30,18 +30,21 @@ const getUserList = {
   type: 'get',
   response: (config) => {
     let list = [];
-    const { page, size, keyword } = config.query;
+    const { page = 1, size = 20, keyword } = config.query;
     const searchList = accountList.filter(
-      (item) => item.name.indexOf(keyword) !== -1
+      (item) => !keyword || item.name.indexOf(keyword) !== -1
         || item.account.indexOf(keyword) !== -1,
     );
     list = searchList.slice((page - 1) * size, page * size);
+    console.log('searchList', searchList, page, size);
     return {
       status: true,
       code: 200,
       data: {
         count: searchList.length,
         list,
+        page,
+        size,
       },
     };
   },

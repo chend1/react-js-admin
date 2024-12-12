@@ -5,7 +5,7 @@ import Error401 from '@/views/error/401'
 import Error404 from '@/views/error/404'
 import AccountManage from '@/views/power/accountManage/accountManage'
 import MenuManage from '@/views/power/menuManage/menuManage'
-import RuleManage from '@/views/power/ruleManage/ruleManage'
+import RoleManage from '@/views/power/roleManage/roleManage'
 import { HomeOutlined } from '@ant-design/icons'
 
 export const localRoutes = [
@@ -66,10 +66,10 @@ export const asyncRoutes = [
             key: 'menuManage',
           },
           {
-            path: 'ruleManage',
-            element: <RuleManage />,
+            path: 'roleManage',
+            element: <RoleManage />,
             label: '规则管理',
-            key: 'ruleManage',
+            key: 'roleManage',
           },
         ],
       },

@@ -1,8 +1,8 @@
 import request from '../request'
 
 // 登录
-export const login = (params) => {
-  return request.post('/login', params)
+export const login = (data) => {
+  return request.post('/login', data)
 }
 
 // 获取用户信息
