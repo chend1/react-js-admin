@@ -102,4 +102,21 @@ const deleteRole = {
   },
 };
 
-export default [getUserList, addUser, editUser, deleteRole];
+// 重置密码
+const resetPassword = {
+  url: '/user/resetPassword',
+  type: 'post',
+  response: (config) => {
+    const { body } = config;
+    const idx = accountList.findIndex((item) => item.id === body.id);
+    accountList[idx] = Object.assign(accountList[idx], { password: '123456' });
+    setStorage('accountList', accountList);
+    return {
+      status: true,
+      code: 200,
+      data: {},
+    };
+  }
+}
+
+export default [getUserList, addUser, editUser, deleteRole, resetPassword];

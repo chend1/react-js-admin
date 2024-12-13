@@ -23,9 +23,9 @@ const getRoleList = {
   type: 'get',
   response: (config) => {
     let list = [];
-    const { page, size, keyword } = config.query;
+    const { page = 1, size = 10, keyword } = config.query;
     const searchList = roleList.filter(
-      (item) => item.name.indexOf(keyword || '') !== -1
+      (item) => !keyword || item.name.indexOf(keyword || '') !== -1
         || item.name.indexOf(keyword || '') !== -1,
     );
     list = searchList.slice((page - 1) * size, page * size);

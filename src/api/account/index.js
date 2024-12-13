@@ -17,5 +17,10 @@ export const editUser = (data) => {
 
 // 删除账号
 export const delUser = (data) => {
-  return request.post('/user/del', data)
+  return request.post('/user/delete', data)
+}
+
+// 重置密码
+export const resetPassword = (data) => {
+  return request.post('/user/resetPassword', data)
 }
