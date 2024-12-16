@@ -1,20 +1,4 @@
-/** 扁平化数组
- *
- *  @param {Array} routeList 需要循环的路由
- *  @param {String} key 判断多维的字段
- */
-
-function flatArray(routeList, key = 'children') {
-  const powerRouteList = []
-  routeList.forEach((route) => {
-    powerRouteList.push(route)
-    if (route[key] && route[key].length) {
-      const list = flatArray(route[key], key)
-      powerRouteList.push(...list)
-    }
-  })
-  return powerRouteList
-}
+import { flatArray } from './index'
 
 /** 根据本地路由和有权限路由,返回前端使用路由和可访问路径列表
  *

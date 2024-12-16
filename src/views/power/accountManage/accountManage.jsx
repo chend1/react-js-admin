@@ -56,6 +56,15 @@ function accountManage() {
       align: 'center',
     },
     {
+      title: '状态',
+      dataIndex: 'status',
+      key: 'status',
+      align: 'center',
+      render: (text, record) => {
+        return record.status === 1 ? '启用' : '禁用'
+      },
+    },
+    {
       title: '操作',
       dataIndex: 'operation',
       key: 'operation',
@@ -119,6 +128,14 @@ function accountManage() {
   const [userInfo, setUserInfo] = useState({ status: 1 })
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [form] = Form.useForm()
+
+  const handleAddUser = () => {
+    setUserInfo({ status: 1 })
+    form.resetFields()
+    form.setFieldsValue({ status: 1 })
+    setIsModalOpen(true)
+  }
+
   const handleEditUser = (record) => {
     form.setFieldsValue({ ...record })
     setUserInfo({ ...record })
@@ -172,7 +189,7 @@ function accountManage() {
               <Button
                 type="primary"
                 style={{ marginLeft: '10px' }}
-                onClick={() => setIsModalOpen(true)}
+                onClick={handleAddUser}
               >
                 新增账号
               </Button>
@@ -185,23 +202,36 @@ function accountManage() {
             dataSource={userList}
             bordered
             size="middle"
-            pagination={{ total, align: 'center', pageSize: searchInfo.size }}
+            pagination={{
+              total,
+              align: 'center',
+              pageSize: searchInfo.size,
+              showTotal: (total) => `共 ${total} 条`,
+              pageSizeOptions: ['5', '10', '15', '20'],
+              showSizeChanger: true,
+              onShowSizeChange: (current, size) => {
+                setSearchInfo({ ...searchInfo, size })
+                getUserListFn()
+              },
+            }}
           />
         </div>
       </div>
       <Modal
         title={userInfo.id ? '编辑账号' : '新增账号'}
         open={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
+        onCancel={() => {
+          setIsModalOpen(false)
+        }}
         onOk={handleConfirm}
         maskClosable={false}
       >
+        {/* initialValues 的使用无法在新增时重置为空，需要打开两次弹窗，所以弃用 */}
         <Form
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 18 }}
-          initialValues={userInfo}
           form={form}
-          labelAlign="left"
+          labelAlign="right"
           name="accountForm"
           style={{ marginTop: '30px' }}
           onFinish={handleConfirm}

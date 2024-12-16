@@ -1,5 +1,5 @@
-import { getStorage, setStorage } from '@/utils/storage';
-import { timestampChange } from '@/utils/index';
+import { getStorage, setStorage } from '@/utils/storage'
+import { timestampChange } from '@/utils/index'
 // 菜单列表
 export const menuList = getStorage('menuList') || [
   {
@@ -112,116 +112,127 @@ export const menuList = getStorage('menuList') || [
     parent_id: 0,
     sort: 2,
   },
-];
+]
 // 获取菜单列表
 const getMenuList = {
   url: '/menu/list',
   type: 'get',
-  response: () => ({
-    status: true,
-    code: 200,
-    data: {
-      list: modifyMenuList(menuList),
-    },
-  }),
-};
+  response: (config) => {
+    const { keyword = '' } = config.query
+    const list = menuList.filter(
+      (item) =>
+        !keyword ||
+        item.title.indexOf(keyword) !== -1 ||
+        item.path.indexOf(keyword) !== -1
+    )
+    return {
+      status: true,
+      code: 200,
+      data: {
+        list: modifyMenuList(list),
+      },
+    }
+  },
+}
 
 // 新增菜单
 const addMenu = {
   url: '/menu/add',
   type: 'post',
   response: (config) => {
-    const meun = { ...config.body, children: [] };
-    const id = menuList[menuList.length - 1].id + 1;
-    const createTime = timestampChange(new Date());
+    const meun = { ...config.body, children: [] }
+    const id = menuList[menuList.length - 1].id + 1
+    const createTime = timestampChange(new Date())
     const item = {
       id,
       ...meun,
       create_time: createTime,
-    };
-    menuList.push(item);
-    setStorage('menuList', menuList);
-    console.log('新增', menuList);
+    }
+    menuList.push(item)
+    setStorage('menuList', menuList)
+    console.log('新增', menuList)
     return {
       status: true,
       code: 200,
       data: {
         msg: '新增成功',
       },
-    };
+    }
   },
-};
+}
 
 // 修改菜单列表
 const editMenu = {
   url: '/menu/edit',
   type: 'post',
   response: (config) => {
-    console.log(config);
-    const { id } = config.body;
-    const index = menuList.findIndex((item) => item.id === id);
-    menuList[index] = Object.assign(menuList[index], config.body, { children: [] });
-    setStorage('menuList', menuList);
+    console.log(config)
+    const { id } = config.body
+    const index = menuList.findIndex((item) => item.id === id)
+    menuList[index] = Object.assign(menuList[index], config.body, {
+      children: [],
+    })
+    setStorage('menuList', menuList)
     return {
       status: true,
       code: 200,
       data: {
         msg: '修改成功',
       },
-    };
+    }
   },
-};
+}
 
 // 删除菜单
 const delMenu = {
   url: '/menu/del',
   type: 'post',
   response: (config) => {
-    const { id } = config.body;
-    const index = menuList.findIndex((item) => item.id === id);
-    menuList.splice(index, 1);
-    setStorage('menuList', menuList);
+    const { id } = config.body
+    const index = menuList.findIndex((item) => item.id === id)
+    menuList.splice(index, 1)
+    setStorage('menuList', menuList)
     return {
       status: true,
       code: 200,
       data: {
         msg: '删除成功',
       },
-    };
+    }
   },
-};
+}
 
-export default [getMenuList, addMenu, editMenu, delMenu];
+export default [getMenuList, addMenu, editMenu, delMenu]
 
 // 修改菜单数据结构
 export function modifyMenuList(data = menuList, key = 'parent_id') {
-  const list = [];
-  const children = [];
-  const dataList = JSON.parse(JSON.stringify(data));
+  const list = []
+  const children = []
+  const dataList = JSON.parse(JSON.stringify(data))
   dataList.forEach((item) => {
     if (item[key] === 0) {
-      list.push(item);
+      list.push(item)
     } else {
-      children.push(item);
+      children.push(item)
     }
-  });
-  findChildren(list, children, key);
-  return list;
+  })
+  findChildren(list, children, key)
+  return list
 }
 // 寻找子级菜单
 function findChildren(list, children, key = 'parent_id') {
-  const newList = [];
-  const newChildren = [];
+  const newList = []
+  const newChildren = []
   children.forEach((item) => {
-    const menu = list.find((listItem) => listItem.id === item[key]);
+    const menu = list.find((listItem) => item[key] && listItem.id === item[key])
     if (!menu) {
-      newChildren.push(item);
+      newChildren.push(item)
     } else {
-      newList.push(item);
-      menu.children.push(item);
+      newList.push(item)
+      menu.children.push(item)
     }
-  });
-  if (newChildren.length > 0) {
-    findChildren(newList, newChildren, key);
+  })
+  if (newChildren.length > 0 && newList.length > 0) {
+    findChildren(newList, newChildren, key)
   }
 }
