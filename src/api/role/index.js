@@ -15,6 +15,11 @@ export const editRole = (data) => {
   return request.post('/role/edit', data)
 }
 
+// 修改角色
+export const authRole = (data) => {
+  return request.post('/role/auth', data)
+}
+
 // 删除角色
 export const delRole = (data) => {
   return request.post('/role/del', data)

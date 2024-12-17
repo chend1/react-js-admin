@@ -1,5 +1,5 @@
-import { getStorage, setStorage } from '@/utils/storage';
-import { timestampChange } from '@/utils/index';
+import { getStorage, setStorage } from '@/utils/storage'
+import { timestampChange } from '@/utils/index'
 // 角色列表
 export const roleList = getStorage('roleList') || [
   {
@@ -16,19 +16,21 @@ export const roleList = getStorage('roleList') || [
     menuList: [100, 101, 102],
     create_time: '2022-10-26 10:10:10',
   },
-];
+]
 // 获得角色列表
 const getRoleList = {
   url: '/role/list',
   type: 'get',
   response: (config) => {
-    let list = [];
-    const { page = 1, size = 10, keyword } = config.query;
+    let list = []
+    const { page = 1, size = 10, keyword } = config.query
     const searchList = roleList.filter(
-      (item) => !keyword || item.name.indexOf(keyword || '') !== -1
-        || item.name.indexOf(keyword || '') !== -1,
-    );
-    list = searchList.slice((page - 1) * size, page * size);
+      (item) =>
+        !keyword ||
+        item.name.indexOf(keyword || '') !== -1 ||
+        item.name.indexOf(keyword || '') !== -1
+    )
+    list = searchList.slice((page - 1) * size, page * size)
     return {
       status: true,
       code: 200,
@@ -36,84 +38,87 @@ const getRoleList = {
         count: roleList.length,
         list,
       },
-    };
+    }
   },
-};
+}
 // 新增角色
 const addRole = {
   url: '/role/add',
   type: 'post',
   response: (config) => {
-    const id = roleList[roleList.length - 1].id + 1;
-    const createTime = timestampChange(new Date());
+    const id = roleList[roleList.length - 1].id + 1
+    const createTime = timestampChange(new Date())
     const item = {
-      id, ...config.body, create_time: createTime,
-    };
-    roleList.push(item);
-    setStorage('roleList', roleList);
+      id,
+      ...config.body,
+      create_time: createTime,
+    }
+    roleList.push(item)
+    setStorage('roleList', roleList)
     return {
       status: true,
       code: 200,
       data: {
         id,
       },
-    };
+    }
   },
-};
+}
 // 修改角色
 const editRole = {
   url: '/role/edit',
   type: 'post',
   response: (config) => {
-    const { id } = config.body;
-    const index = roleList.findIndex((item) => item.id === id);
-    roleList[index] = Object.assign(roleList[index], config.body);
-    setStorage('roleList', roleList);
+    const { id } = config.body
+    const index = roleList.findIndex((item) => item.id === id)
+    roleList[index] = Object.assign(roleList[index], config.body)
+    setStorage('roleList', roleList)
     return {
       status: true,
       code: 200,
       data: {
         id,
       },
-    };
+    }
   },
-};
+}
 // 删除角色
 const deleteRole = {
-  url: '/role/delete',
+  url: '/role/del',
   type: 'post',
   response: (config) => {
-    const { id } = config.body;
-    const index = roleList.findIndex((item) => item.id === id);
-    roleList.splice(index, 1);
-    setStorage('roleList', roleList);
+    const { id } = config.body
+    const index = roleList.findIndex((item) => item.id === id)
+    roleList.splice(index, 1)
+    setStorage('roleList', roleList)
     return {
       status: true,
       code: 200,
       data: {
         id,
       },
-    };
+    }
   },
-};
+}
 
 // 授权角色
 const authRole = {
   url: '/role/auth',
   type: 'post',
   response: (config) => {
-    const { id } = config.body;
-    const index = roleList.findIndex((item) => item.id === id);
-    roleList[index] = config.body;
-    setStorage('roleList', roleList);
+    const { id } = config.body
+    const index = roleList.findIndex((item) => item.id === id)
+    const auths = config.body.auths
+    roleList[index].menuList = JSON.parse(auths || '[]')
+    setStorage('roleList', roleList)
     return {
       status: true,
       code: 200,
       data: {
         id,
       },
-    };
+    }
   },
-};
+}
 
-export default [getRoleList, addRole, editRole, deleteRole, authRole];
+export default [getRoleList, addRole, editRole, deleteRole, authRole]

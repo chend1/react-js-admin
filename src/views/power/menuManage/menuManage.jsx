@@ -7,17 +7,13 @@ import {
   Popconfirm,
   Modal,
   Form,
-  Select,
+  TreeSelect,
   Radio,
   message,
 } from 'antd'
 import { getMenuList, addMenu, editMenu, delMenu } from '@/api'
-import { flatArray } from '@/utils'
 
 function menuManage() {
-  const [menuList, setMenuList] = useState([])
-  const [menuOptions, setMenuOptions] = useState([])
-  const [keyword, setKeyword] = useState('')
 
   const columns = [
     {
@@ -79,10 +75,14 @@ function menuManage() {
       ),
     },
   ]
+
+  const [menuList, setMenuList] = useState([])
+  const [keyword, setKeyword] = useState('')
+  const [menuOptions, setMenuOptions] = useState([])
   const getMenuListFn = async () => {
     const res = await getMenuList({ keyword })
     setMenuList(res.list)
-    setMenuOptions(flatArray(res.list))
+    setMenuOptions([{ id: 0, title: '无' }, ...res.list])
   }
 
   useEffect(() => {
@@ -189,24 +189,12 @@ function menuManage() {
             name="parent_id"
             rules={[{ required: true, message: '请选择上级菜单' }]}
           >
-            <Select
+            <TreeSelect
               placeholder="请选择上级菜单"
-              showSearch
-              filterOption={(input, option) => {
-                return (
-                  (option?.children ?? '')
-                    .toLowerCase()
-                    .indexOf(input.toLowerCase()) >= 0
-                )
-              }}
-            >
-              <Select.Option value={0}>无</Select.Option>
-              {menuOptions.map((item) => (
-                <Select.Option key={item.id} value={item.id}>
-                  {item.title}
-                </Select.Option>
-              ))}
-            </Select>
+              fieldNames={{ label: 'title', value: 'id' }}
+              treeDefaultExpandAll
+              treeData={menuOptions}
+            />
           </Form.Item>
           <Form.Item
             label="菜单名称"

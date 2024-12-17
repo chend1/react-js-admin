@@ -103,13 +103,7 @@ function accountManage() {
   ]
   const getUserListFn = async () => {
     const { list, count } = await getUserList(searchInfo)
-    const data = list.map((item) => {
-      return {
-        key: item.id,
-        ...item,
-      }
-    })
-    setUserList(data)
+    setUserList(list)
     setTotal(count)
   }
 
@@ -236,6 +230,7 @@ function accountManage() {
           style={{ marginTop: '30px' }}
           onFinish={handleConfirm}
           onFinishFailed={(error) => console.log('error', error)}
+          rowKey="id"
         >
           <Form.Item
             label="用户名"
