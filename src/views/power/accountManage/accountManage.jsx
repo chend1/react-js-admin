@@ -196,6 +196,7 @@ function accountManage() {
             dataSource={userList}
             bordered
             size="middle"
+            rowKey="id"
             pagination={{
               total,
               align: 'center',
@@ -230,7 +231,6 @@ function accountManage() {
           style={{ marginTop: '30px' }}
           onFinish={handleConfirm}
           onFinishFailed={(error) => console.log('error', error)}
-          rowKey="id"
         >
           <Form.Item
             label="用户名"

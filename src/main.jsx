@@ -6,6 +6,7 @@ import { ConfigProvider } from 'antd'
 import { mockXHR } from '../mock/index'
 import zhCN from 'antd/locale/zh_CN'
 import 'dayjs/locale/zh-cn'
+import './assets/css/theme.less'
 
 if (import.meta.env.MODE === 'development') {
   mockXHR()

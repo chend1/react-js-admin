@@ -5,16 +5,18 @@ import { getStorage } from '../utils/storage'
 import { handleGetUserInfo, handleLogout } from '../store/mainSlice'
 import { localRoutes, asyncRoutes, redirectRoutes } from './index'
 import { generateRoutes } from '@/utils/permission'
+
+// 判断是否第一次渲染
+let renderNum = 0
 function router() {
   const menuList = useSelector((state) => state.main.menuList)
   const routes = useMemo(() => {
     return generateRoutes(asyncRoutes, menuList, 'children', 'path', 'route')
   }, [menuList])
-  const menu = [
-    ...localRoutes,
-    ...routes,
-    ...redirectRoutes,
-  ]
+  const menu = [...localRoutes, ...routes]
+  if (renderNum > 1) {
+    menu.push(...redirectRoutes)
+  }
   const element = useRoutes(menu)
   return element
 }
@@ -51,8 +53,16 @@ function RouterGuard(RouterComponent) {
 
     // 监听menuList
     useEffect(() => {
+      /**
+       * 由于登录后，menuList初始值也会触发useEffect，因此需要判断是否第一次触发
+       * 两次均为空时，才能确定没有菜单权限，跳转到401
+       */
+      renderNum++
       if (menuList.length === 0) {
-        // navigate('/401')
+        if (renderNum > 1) {
+          navigate('/401')
+          renderNum = 0
+        }
       } else {
         navigate(location.pathname)
       }

@@ -43,6 +43,14 @@ function layout() {
     dispatch(handleLogout())
     navigate('/login')
   }
+
+  const changeTheme = () => {
+    if (document.body.classList.contains('dark')) {
+      document.body.classList.remove('dark')
+    } else {
+      document.body.classList.add('dark')
+    }
+  }
   return (
     <div className="layout">
       <nav style={{ width: collapsed ? '80px' : '230px' }}>
@@ -77,6 +85,10 @@ function layout() {
           <Dropdown
             menu={{
               items: [
+                {
+                  label: <span onClick={changeTheme}>暗色主题</span>,
+                  key: 'theme',
+                },
                 {
                   label: <span onClick={logout}>退出登录</span>,
                   key: 'logout',
