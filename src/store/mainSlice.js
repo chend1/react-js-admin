@@ -38,6 +38,7 @@ const mainSlice = createSlice({
     userInfo: {},
     token: '',
     menuList: [],
+    theme: 'light',
   },
   reducers: {
     setUserInfo(state, action) {
@@ -50,6 +51,9 @@ const mainSlice = createSlice({
       state.menuList = []
       setStorage('token', '')
     },
+    changeTheme(state, action){
+      state.theme = action.payload.theme
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(handleLogin.fulfilled, (state, action) => {
@@ -63,6 +67,6 @@ const mainSlice = createSlice({
   },
 })
 
-export const { handleLogout } = mainSlice.actions
+export const { handleLogout, changeTheme } = mainSlice.actions
 
 export default mainSlice.reducer

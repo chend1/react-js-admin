@@ -161,6 +161,7 @@ function menuManage() {
             size="middle"
             rowKey="id"
             pagination={false}
+            rowClassName='table-row'
           />
         </div>
       </div>

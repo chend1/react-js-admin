@@ -2,19 +2,21 @@
   width: 100%;
   height: 100vh;
   display: flex;
+  color: var(--text-color);
   nav{
     height: 100%;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    background-color: var(--bg-color);
     .head{
       display: flex;
       height: 40px;
       align-items: center;
       justify-content: space-between;
-      background: #fff;
-      border-bottom: 1px solid rgba(5, 5, 5, 0.06);
-      border-right: 1px solid rgba(5, 5, 5, 0.06);
+      background-color: var(--bg-color);
+      border-bottom: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
       .logo{
         display: flex;
         line-height: 40px;
@@ -40,7 +42,7 @@
         justify-content: center;
         cursor: pointer;
         &:hover{
-          color: #1677ff;
+          color: var(--primary-color);
         }
       }
     }
@@ -55,8 +57,9 @@
       height: 40px;
       align-items: center;
       justify-content: flex-end;
-      border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+      border-bottom: 1px solid var(--border-color);
       padding: 0 20px;
+      background-color: var(--bg-color);
       .user-info{
         display: flex;
         align-items: center;
@@ -76,8 +79,7 @@
     .content{
       flex: 1;
       overflow: hidden;
-      background: #fff;
-      border-right: 1px solid rgba(5, 5, 5, 0.06);
+      background-color: var(--bg-color);
       box-sizing: border-box;
       padding: 10px;
     }

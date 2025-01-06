@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react'
 import { Outlet, useNavigate } from 'react-router'
 import { Menu, Dropdown } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
-import { handleLogout } from '../store/mainSlice'
+import { handleLogout, changeTheme } from '../store/mainSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { asyncRoutes } from '@/router'
@@ -43,12 +43,14 @@ function layout() {
     dispatch(handleLogout())
     navigate('/login')
   }
-
-  const changeTheme = () => {
-    if (document.body.classList.contains('dark')) {
+  const theme = useSelector((state) => state.main.theme)
+  const handleChangeTheme = () => {
+    if (theme === 'dark') {
       document.body.classList.remove('dark')
+      dispatch(changeTheme({ theme: 'light' }))
     } else {
       document.body.classList.add('dark')
+      dispatch(changeTheme({ theme: 'dark' }))
     }
   }
   return (
@@ -86,7 +88,11 @@ function layout() {
             menu={{
               items: [
                 {
-                  label: <span onClick={changeTheme}>暗色主题</span>,
+                  label: (
+                    <span onClick={handleChangeTheme}>
+                      {theme === 'dark' ? '亮色主题' : '暗色主题'}
+                    </span>
+                  ),
                   key: 'theme',
                 },
                 {
